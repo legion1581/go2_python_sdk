@@ -1,0 +1,108 @@
+DDS_ERROR_DESCRIPTIONS = {
+    3001: "Unknown error",
+    3102: "Request sending error",
+    3103: "API not registered",
+    3104: "Request timeout",
+    3105: "Request and response data do not match",
+    3106: "Invalid response data",
+    3107: "Invalid lease",
+    3201: "Response sending error",
+    3202: "Internal server error",
+    3203: "API not implemented on the server",
+    3204: "API parameter error",
+    3205: "Request rejected",
+    3206: "Invalid lease",
+    3207: "Lease already exists",
+    }
+
+ROBOT_CMD = {
+    "Damp": 1001,
+    "BalanceStand": 1002,
+    "StopMove": 1003,
+    "StandUp": 1004,
+    "StandDown": 1005,
+    "RecoveryStand": 1006,
+    "Euler": 1007,
+    "Move": 1008,
+    "Sit": 1009,
+    "RiseSit": 1010,
+    "SwitchGait": 1011,
+    "Trigger": 1012,
+    "BodyHeight": 1013,
+    "FootRaiseHeight": 1014,
+    "SpeedLevel": 1015,
+    "Hello": 1016,
+    "Stretch": 1017,
+    "TrajectoryFollow": 1018,
+    "ContinuousGait": 1019,
+    "Content": 1020,
+    "Wallow": 1021,
+    "Dance1": 1022,
+    "Dance2": 1023,
+    "GetBodyHeight": 1024, #Dance3
+    "GetFootRaiseHeight": 1025, #Dance4
+    "GetSpeedLevel": 1026,
+    "SwitchJoystick": 1027,
+    "Pose": 1028,
+    "Scrape": 1029,
+    "FrontFlip": 1030,
+    "FrontJump": 1031,
+    "FrontPounce": 1032,
+    "WiggleHips": 1033,
+    "GetState": 1034,
+    "EconomicGait": 1035,
+    "FingerHeart": 1036,
+    "Handstand": 1301,
+    "CrossStep": 1302,
+    "OnesidedStep": 1303,
+    "Bound": 1304,
+    "MoonWalk": 1305,
+    "LeadFollow": 1045    
+}
+
+#Topics only available through WebRTC (however will work through DDS)
+WEBRTC_TOPICS = {
+    "LOW_STATE_LF": "rt/lf/lowstate",
+    "MULTIPLE_STATE": "rt/multiplestate",
+    "FRONT_PHOTO_REQ": "rt/api/videohub/request",
+    "ULIDAR_SWITCH": "rt/utlidar/switch",
+    "ULIDAR": "rt/utlidar/voxel_map",
+    "ULIDAR_ARRAY": "rt/utlidar/voxel_map_compressed",
+    "ULIDAR_STATE": "rt/utlidar/lidar_state",
+    "ROBOTODOM": "rt/utlidar/robot_pose",
+    "UWB_REQ": "rt/api/uwbswitch/request",
+    "UWB_STATE": "rt/uwbstate",
+    "LOW_CMD": "rt/lowcmd",
+    "WIRELESS_CONTROLLER": "rt/wirelesscontroller",
+    "SPORT_MOD": "rt/api/sport/request",
+    "SPORT_MOD_STATE": "rt/sportmodestate",
+    "LF_SPORT_MOD_STATE": "rt/lf/sportmodestate",
+    "BASH_REQ": "rt/api/bashrunner/request",
+    "SELF_TEST": "rt/selftest",
+    "GRID_MAP": "rt/mapping/grid_map",
+    "SERVICE_STATE": "rt/servicestate",
+    "GPT_FEEDBACK": "rt/gptflowfeedback",
+    "VUI": "rt/api/vui/request",
+    "OBSTACLES_AVOID": "rt/api/obstacles_avoid/request",
+    "SLAM_QT_COMMAND": "rt/qt_command",
+    "SLAM_ADD_NODE": "rt/qt_add_node",
+    "SLAM_ADD_EDGE": "rt/qt_add_edge",
+    "SLAM_QT_NOTICE": "rt/qt_notice",
+    "SLAM_PC_TO_IMAGE_LOCAL": "rt/pctoimage_local",
+    "SLAM_ODOMETRY": "rt/lio_sam_ros2/mapping/odometry",
+    "ARM_COMMAND": "rt/arm_Command",
+    "ARM_FEEDBACK": "rt/arm_Feedback",
+    "AUDIO_HUB_REQ": "rt/api/audiohub/request",
+    "AUDIO_HUB_PLAY_STATE": "rt/audiohub/player/state",
+    "GAS_SENSOR": "rt/gas_sensor",
+    "GAS_SENSOR_REQ": "rt/api/gas_sensor/request"
+}
+
+DDS_ONLY_TOPICS = {
+    "MF_LOW_STATE": "rt/mf/lowstate",
+    "LOW_STATE": "rt/lowstate",
+    "MF_SPORT_MOD_STATE": "rt/mf/sportmodestate"
+}
+
+# Combine WebRTC topics with DDS-specific topics for comprehensive DDS topics
+DDS_TOPICS = {**WEBRTC_TOPICS, **DDS_ONLY_TOPICS}
