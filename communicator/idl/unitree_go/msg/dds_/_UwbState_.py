@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class UwbState_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.UwbState_"):
+class UwbState_(idl.IdlStruct, typename="unitree_go.msg.dds_.UwbState_"):
     version: types.array[types.uint8, 2]
     channel: types.uint8
     joy_mode: types.uint8

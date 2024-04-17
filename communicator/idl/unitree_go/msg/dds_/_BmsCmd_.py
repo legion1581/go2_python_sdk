@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class BmsCmd_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.BmsCmd_"):
+class BmsCmd_(idl.IdlStruct, typename="unitree_go.msg.dds_.BmsCmd_"):
     off: types.uint8
     reserve: types.array[types.uint8, 3]
 

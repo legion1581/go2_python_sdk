@@ -15,15 +15,15 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_api
+import unitree_api
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class RequestHeader_(idl.IdlStruct, typename="communicator.idl.unitree_api.msg.dds_.RequestHeader_"):
-    identity: 'communicator.idl.unitree_api.msg.dds_.RequestIdentity_'
-    lease: 'communicator.idl.unitree_api.msg.dds_.RequestLease_'
-    policy: 'communicator.idl.unitree_api.msg.dds_.RequestPolicy_'
+class RequestHeader_(idl.IdlStruct, typename="unitree_api.msg.dds_.RequestHeader_"):
+    identity: 'unitree_api.msg.dds_.RequestIdentity_'
+    lease: 'unitree_api.msg.dds_.RequestLease_'
+    policy: 'unitree_api.msg.dds_.RequestPolicy_'
 
 

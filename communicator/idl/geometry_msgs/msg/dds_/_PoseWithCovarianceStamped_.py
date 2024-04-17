@@ -15,18 +15,18 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 if TYPE_CHECKING:
-    import communicator.idl.std_msgs.msg.dds_
+    import std_msgs.msg.dds_
 
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class PoseWithCovarianceStamped_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.PoseWithCovarianceStamped_"):
-    header: 'communicator.idl.std_msgs.msg.dds_.Header_'
-    pose: 'communicator.idl.geometry_msgs.msg.dds_.PoseWithCovariance_'
+class PoseWithCovarianceStamped_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.PoseWithCovarianceStamped_"):
+    header: 'std_msgs.msg.dds_.Header_'
+    pose: 'geometry_msgs.msg.dds_.PoseWithCovariance_'
 
 

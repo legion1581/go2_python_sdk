@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.std_msgs
+import std_msgs
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class String_(idl.IdlStruct, typename="communicator.idl.std_msgs.msg.dds_.String_"):
+class String_(idl.IdlStruct, typename="std_msgs.msg.dds_.String_"):
     data: str
 
 

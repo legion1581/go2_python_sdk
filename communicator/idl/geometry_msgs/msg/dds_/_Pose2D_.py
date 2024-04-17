@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class Pose2D_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.Pose2D_"):
+class Pose2D_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.Pose2D_"):
     x: types.float64
     y: types.float64
     theta: types.float64

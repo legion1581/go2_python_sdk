@@ -15,14 +15,14 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class TwistWithCovariance_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.TwistWithCovariance_"):
-    twist: 'communicator.idl.geometry_msgs.msg.dds_.Twist_'
+class TwistWithCovariance_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.TwistWithCovariance_"):
+    twist: 'geometry_msgs.msg.dds_.Twist_'
     covariance: types.array[types.float64, 36]
 
 

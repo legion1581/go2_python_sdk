@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class SportModeCmd_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.SportModeCmd_"):
+class SportModeCmd_(idl.IdlStruct, typename="unitree_go.msg.dds_.SportModeCmd_"):
     mode: types.uint8
     gait_type: types.uint8
     speed_level: types.uint8
@@ -31,7 +31,7 @@ class SportModeCmd_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds
     euler: types.array[types.float32, 3]
     velocity: types.array[types.float32, 2]
     yaw_speed: types.float32
-    bms_cmd: 'communicator.idl.unitree_go.msg.dds_.BmsCmd_'
-    path_point: types.array['communicator.idl.unitree_go.msg.dds_.PathPoint_', 30]
+    bms_cmd: 'unitree_go.msg.dds_.BmsCmd_'
+    path_point: types.array['unitree_go.msg.dds_.PathPoint_', 30]
 
 

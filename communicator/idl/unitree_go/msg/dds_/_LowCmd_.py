@@ -15,21 +15,21 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class LowCmd_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.LowCmd_"):
+class LowCmd_(idl.IdlStruct, typename="unitree_go.msg.dds_.LowCmd_"):
     head: types.array[types.uint8, 2]
     level_flag: types.uint8
     frame_reserve: types.uint8
     sn: types.array[types.uint32, 2]
     version: types.array[types.uint32, 2]
     bandwidth: types.uint16
-    motor_cmd: types.array['communicator.idl.unitree_go.msg.dds_.MotorCmd_', 20]
-    bms_cmd: 'communicator.idl.unitree_go.msg.dds_.BmsCmd_'
+    motor_cmd: types.array['unitree_go.msg.dds_.MotorCmd_', 20]
+    bms_cmd: 'unitree_go.msg.dds_.BmsCmd_'
     wireless_remote: types.array[types.uint8, 40]
     led: types.array[types.uint8, 12]
     fan: types.array[types.uint8, 2]

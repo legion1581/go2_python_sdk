@@ -1,4 +1,3 @@
-
 # Common base class for PubSub and ReqRes communication
 class CommunicatorWrapper:
     def publish(self, topic, data, data_type):

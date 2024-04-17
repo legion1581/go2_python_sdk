@@ -2,8 +2,11 @@
   <Domain Id="any">
     <General>
       <Interfaces>
-        <NetworkInterface name="wlan0" priority="default" multicast="default" />
+        <NetworkInterface name="eth0" priority="default" multicast="default" />
       </Interfaces>
     </General>
+    <Discovery>
+      <EnableTopicDiscoveryEndpoints>true</EnableTopicDiscoveryEndpoints>
+    </Discovery>
   </Domain>
 </CycloneDDS>

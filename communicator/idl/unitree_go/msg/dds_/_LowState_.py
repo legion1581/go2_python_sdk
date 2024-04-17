@@ -15,22 +15,22 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class LowState_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.LowState_"):
+class LowState_(idl.IdlStruct, typename="unitree_go.msg.dds_.LowState_"):
     head: types.array[types.uint8, 2]
     level_flag: types.uint8
     frame_reserve: types.uint8
     sn: types.array[types.uint32, 2]
     version: types.array[types.uint32, 2]
     bandwidth: types.uint16
-    imu_state: 'communicator.idl.unitree_go.msg.dds_.IMUState_'
-    motor_state: types.array['communicator.idl.unitree_go.msg.dds_.MotorState_', 20]
-    bms_state: 'communicator.idl.unitree_go.msg.dds_.BmsState_'
+    imu_state: 'unitree_go.msg.dds_.IMUState_'
+    motor_state: types.array['unitree_go.msg.dds_.MotorState_', 20]
+    bms_state: 'unitree_go.msg.dds_.BmsState_'
     foot_force: types.array[types.int16, 4]
     foot_force_est: types.array[types.int16, 4]
     tick: types.uint32

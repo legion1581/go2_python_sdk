@@ -5,7 +5,6 @@ import asyncio
 from communicator.constants import ROBOT_CMD
 from communicator.idl.unitree_go.msg.dds_ import SportModeState_
 
-logging.basicConfig(level=logging.DEBUG)  # Set the desired level
 logger = logging.getLogger(__name__)
 
 class SportClient():
@@ -20,10 +19,11 @@ class SportClient():
         'api_id': api_id,
         'parameter': parameter,
         'priority': priority,
+        'noreply' : noreply
         }
 
         # Send the request and wait for a response if noreply is False
-        response = await self.communicator.publishReq(self.sport_topic, requestData, timeout=5) if not noreply else None
+        response = await self.communicator.publishReq(self.sport_topic, requestData, timeout=2)
 
         # If noreply is True, just indicate that the request was sent
         if noreply:
@@ -420,14 +420,28 @@ class SportClient():
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
     
-    async def TrajectoryFollow(self, ack=False):
+    async def TrajectoryFollow(self, path_points, ack=False):
         """
-        Each trajectory point contains the position and speed of the robotic dog at a certain time in the future,
-        with the reference coordinate system being the absolute coordinate system of the robot. 
-        Through trajectory tracking, more complex and flexible movements can be achieved.
-        [Traj(),Traj(),...30times]
+        Sends a trajectory consisting of multiple points to the robot for it to follow.
         """
-        pass
+        if len(path_points) != 30:
+            raise ValueError("Exactly 30 path points are required.")
+
+        action_id = ROBOT_CMD["TrajectoryFollow"]
+        js_path = [point.__dict__ for point in path_points]  # Convert each PathPoint to dictionary
+
+        # Convert the path list to a JSON formatted string
+        para = json.dumps(js_path)
+
+        # Send the request and await the response
+        response = await self.doRequest(action_id, parameter=para, noreply=not ack)
+
+        if response:
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
 
     async def SwitchJoystick(self, flag, ack=False):
         """
@@ -642,13 +656,29 @@ class SportClient():
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
     
-    async def GetState(self):
+    async def GetState(self, parameters):
         """
         Retrieve the current status of the robot by sending a request for specific parameters.
-        Parses and returns the parameter values from the response.
+        This method allows for querying various attributes of the robot, such as motion status, body height,
+        leg lift height, speed gear, gait pattern, joystick control status, dance activity,
+        continuous gait mode, and economic gait mode.
+
+        Parameters:
+            parameters (list of str): A list of parameter names to query. Possible values are:
+                - "state"
+                - "bodyHeight"
+                - "footRaiseHeight"
+                - "speedLevel"
+                - "gait"
+                - "joystick"
+                - "dance"
+                - "continuousGait"
+                - "economicGait"
+
+        Returns:
+            dict: A dictionary with the requested parameters and their values if the request is successful.
+                  If a parameter is not found, it will not be included in the dictionary.
         """
-        parameters = ["state", "gait", "dance", "continuousGait", "economicGait"]
-        # data = json.dumps(parameters)
 
         action_id = ROBOT_CMD["GetState"]
         
@@ -665,9 +695,11 @@ class SportClient():
                 response_data = json.loads(response.data)
                 for param in parameters:
                     if param in response_data:
-                        param_value = response_data[param]    
+                        param_value_json = response_data[param]
+                        # Parse the JSON string of the parameter value to a dictionary
+                        param_value_dict = json.loads(param_value_json) if isinstance(param_value_json, str) else param_value_json
                         # Extract the 'data' key from the parsed JSON of each parameter
-                        parsed_parameters[param] = param_value.get('data', None)
+                        parsed_parameters[param] = param_value_dict.get('data', None)
                 return parsed_parameters
             except json.JSONDecodeError as e:
                 logger.error(f"Failed to parse response data: {e}")

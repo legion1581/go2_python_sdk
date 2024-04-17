@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class TimeSpec_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.TimeSpec_"):
+class TimeSpec_(idl.IdlStruct, typename="unitree_go.msg.dds_.TimeSpec_"):
     sec: types.int32
     nanosec: types.uint32
 

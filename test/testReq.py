@@ -1,8 +1,11 @@
 import asyncio
 import json
-from clients.sport_client import SportClient 
+import logging
 from communicator.cyclonedds.ddsCommunicator import DDSCommunicator
+from clients.sport_client import SportClient 
 from communicator.idl.unitree_api.msg.dds_ import RequestIdentity_, Request_, Response_, ResponseHeader_, ResponseStatus_
+
+logging.basicConfig(level=logging.INFO)  # Set the desired level
 
 class MockServer:
     """
@@ -40,23 +43,24 @@ class MockServer:
         self.communicator.subscribe(self.request_topic, Request_, callback)  # Ensure Request_ is defined or imported
 
 async def perform_test():
-    communicator = DDSCommunicator(interface="wlan0")
+    communicator = DDSCommunicator(interface="eth0")
     client = SportClient(communicator)
 
     # Setup the mock server with the same communicator as the client, for demonstration
     # server = MockServer(communicator, "rt/api/sport/request", "rt/api/sport/response")
     # await server.listen_for_requests()  # Use await here if listen_for_requests is an async operation
 
-    # Wait a bit to ensure subscriptions are active
-    await asyncio.sleep(1)  # Wait for 1 second, adjust as necessary
-
-    try:
-        result = await client.GetState()
-        print("Robot state parameters retrieved successfully:")
-        for param, value in result.items():
-            print(f"{param}: {value}")
-    except Exception as e:
-        print(f"Failed to retrieve robot state parameters: {e}")
+    while True:
+        try:
+            parameters = ["state", "gait", "dance", "continuousGait", "economicGait"]
+            result = await client.GetState(parameters)
+            print("Robot state parameters retrieved successfully:")
+            # for param, value in result.items():
+            #     print(f"{param}: {value}")
+        except Exception as e:
+            print(f"Failed to retrieve robot state parameters: {e}")
+        
+        await asyncio.sleep(0.1)
 
 # Usage example
 if __name__ == "__main__":

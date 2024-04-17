@@ -55,7 +55,7 @@ async def publish_sport_mode_state(communicator, topic):
 
 async def perform_test():
 
-    communicator = DDSCommunicator(interface="wlan0")
+    communicator = DDSCommunicator(interface="eth0")
     # Create a SportState instance and start listening
     sport_state = await SportState.create_and_listen(communicator, frequency="lf")
      # Add custom callback for processing data

@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_api
+import unitree_api
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class RequestIdentity_(idl.IdlStruct, typename="communicator.idl.unitree_api.msg.dds_.RequestIdentity_"):
+class RequestIdentity_(idl.IdlStruct, typename="unitree_api.msg.dds_.RequestIdentity_"):
     id: types.int64
     api_id: types.int64
 

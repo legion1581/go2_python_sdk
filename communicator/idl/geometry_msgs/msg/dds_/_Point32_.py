@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class Point32_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.Point32_"):
+class Point32_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.Point32_"):
     x: types.float32
     y: types.float32
     z: types.float32

@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class IMUState_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.IMUState_"):
+class IMUState_(idl.IdlStruct, typename="unitree_go.msg.dds_.IMUState_"):
     quaternion: types.array[types.float32, 4]
     gyroscope: types.array[types.float32, 3]
     accelerometer: types.array[types.float32, 3]

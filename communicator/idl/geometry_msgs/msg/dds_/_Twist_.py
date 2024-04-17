@@ -15,14 +15,14 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class Twist_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.Twist_"):
-    linear: 'communicator.idl.geometry_msgs.msg.dds_.Vector3_'
-    angular: 'communicator.idl.geometry_msgs.msg.dds_.Vector3_'
+class Twist_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.Twist_"):
+    linear: 'geometry_msgs.msg.dds_.Vector3_'
+    angular: 'geometry_msgs.msg.dds_.Vector3_'
 
 

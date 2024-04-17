@@ -15,13 +15,13 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.unitree_go
+import unitree_go
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class WirelessController_(idl.IdlStruct, typename="communicator.idl.unitree_go.msg.dds_.WirelessController_"):
+class WirelessController_(idl.IdlStruct, typename="unitree_go.msg.dds_.WirelessController_"):
     lx: types.float32
     ly: types.float32
     rx: types.float32

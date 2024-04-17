@@ -15,18 +15,18 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 if TYPE_CHECKING:
-    import communicator.idl.std_msgs.msg.dds_
+    import std_msgs.msg.dds_
 
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class PointStamped_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.PointStamped_"):
-    header: 'communicator.idl.std_msgs.msg.dds_.Header_'
-    point: 'communicator.idl.geometry_msgs.msg.dds_.Point_'
+class PointStamped_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.PointStamped_"):
+    header: 'std_msgs.msg.dds_.Header_'
+    point: 'geometry_msgs.msg.dds_.Point_'
 
 

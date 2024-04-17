@@ -1,8 +1,14 @@
+import os
+import sys
 import asyncio
 from clients.sport_client import SportClient
+import logging
 from communicator.constants import ROBOT_CMD
 from communicator.cyclonedds.ddsCommunicator import DDSCommunicator
+
 from communicator.idl.unitree_api.msg.dds_ import RequestIdentity_, Request_, Response_, ResponseHeader_, ResponseStatus_
+
+logging.basicConfig(level=logging.INFO)  # Set the desired level
 
 class MockServer:
     """
@@ -17,7 +23,7 @@ class MockServer:
         async def callback(request_data):
             print("Received request:", request_data)
             # Check if the request is a Damp command
-            if request_data.header.identity.api_id == ROBOT_CMD["Damp"]:
+            if request_data.header.identity.api_id == ROBOT_CMD["HELLO"]:
                 print("Received Damp command, sending acknowledgment.")
                 
                 # Prepare acknowledgment response
@@ -35,17 +41,19 @@ class MockServer:
         self.communicator.subscribe(self.request_topic, Request_, callback)
 
 async def perform_test():
-    communicator = DDSCommunicator(interface="wlan0")
+    communicator = DDSCommunicator(interface="eth0")
     client = SportClient(communicator)
     # Setup the mock server with the same communicator as the client, for demonstration
     # server = MockServer(communicator, "rt/api/sport/request", "rt/api/sport/response")
     # await server.listen_for_requests()
-
-    # Wait a bit to ensure subscriptions are active
     await asyncio.sleep(1)
 
-    # Send a Damp command
-    await client.Hello(ack=False)
+    while True:
+
+        # Send a Damp commands
+        await client.Hello(ack=True)
+
+        await asyncio.sleep(1)
 
 # Usage example
 if __name__ == "__main__":

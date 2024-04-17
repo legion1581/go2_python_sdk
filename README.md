@@ -26,7 +26,7 @@ List any prerequisites here, such as Python version, dependencies, etc.
 
 ### Installation
 
-Provide step-by-step instructions to install the SDK, for example:
+Step-by-step instructions to install the SDK:
 
 ```bash
 git clone https://github.com/legion1581/go2_python_sdk.git

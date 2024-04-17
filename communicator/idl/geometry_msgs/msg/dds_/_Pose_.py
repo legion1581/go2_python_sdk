@@ -15,14 +15,14 @@ import cyclonedds.idl.annotations as annotate
 import cyclonedds.idl.types as types
 
 # root module import for resolving types
-import communicator.idl.geometry_msgs
+import geometry_msgs
 
 
 @dataclass
 @annotate.final
 @annotate.autoid("sequential")
-class Pose_(idl.IdlStruct, typename="communicator.idl.geometry_msgs.msg.dds_.Pose_"):
-    position: 'communicator.idl.geometry_msgs.msg.dds_.Point_'
-    orientation: 'communicator.idl.geometry_msgs.msg.dds_.Quaternion_'
+class Pose_(idl.IdlStruct, typename="geometry_msgs.msg.dds_.Pose_"):
+    position: 'geometry_msgs.msg.dds_.Point_'
+    orientation: 'geometry_msgs.msg.dds_.Quaternion_'
 
 
