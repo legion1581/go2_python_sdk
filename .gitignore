@@ -1,2 +1,6 @@
 RE/
 __pycache__/
+test/
+log/
+trajectory_follow.py
+basic_client.py

@@ -2,12 +2,25 @@ import json
 import logging
 import math
 import asyncio
-from communicator.constants import ROBOT_CMD
+from communicator.constants import SPORT_CLIENT_API_ID, SPORT_MODE_SWITCH_API_ID
 from communicator.idl.unitree_go.msg.dds_ import SportModeState_
 
 logger = logging.getLogger(__name__)
 
+'''
+The sport_client is divided into three main components: SportClient, SportState, and SportModeSwitcher.
+
+- SportClient: This class is used to send high-level commands and actions, as well as to follow trajectories.
+- SportState: This class is designed to obtain high-level motion states of the Go2, such as position, speed, and posture.
+- SportModeSwitcher: This class manages switching the high-level operational mode between normal and advanced.
+   Certain maneuvers like Handstand, CrossStep, OnesidedStep, and Bound are only supported in the advanced mode,
+   which requires firmware version 1.0.23 or later.
+'''
+
 class SportClient():
+    """
+    SportClient: This class is used to send high-level commands and actions, as well as to follow trajectories
+    """
     def __init__(self, communicator):
         # Instantiate communication interface (either DDS or WebRTC)    
         self.communicator = communicator      
@@ -39,8 +52,8 @@ class SportClient():
         All motor joints stop moving and enter a damping state. 
         This mode has the highest priority and is used for emergency stops in unexpected situations
         """
-        action_id = ROBOT_CMD["Damp"]
-        response = await self.doRequest(action_id, noreply=not ack)
+        action_id = SPORT_CLIENT_API_ID["Damp"]
+        response = await self.doRequest(action_id, priority=1, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
             logger.info(f"Command with api_id: {action_id} succeeded")
@@ -57,7 +70,7 @@ class SportClient():
         You can control the font and height of the body by calling the Euler() and BodyHeight() 
         interfaces (see the corresponding section of the table for details)
         """
-        action_id = ROBOT_CMD["BalanceStand"] 
+        action_id = SPORT_CLIENT_API_ID["BalanceStand"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -72,8 +85,8 @@ class SportClient():
         """
         Stop the current motion and restore the internal motion parameters of Go2 to the default values
         """
-        action_id = ROBOT_CMD["StopMove"] 
-        response = await self.doRequest(action_id, noreply=not ack)
+        action_id = SPORT_CLIENT_API_ID["StopMove"] 
+        response = await self.doRequest(action_id, priority=1, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
             logger.info(f"Command with api_id: {action_id} succeeded")
@@ -89,7 +102,7 @@ class SportClient():
         Compared to the balanced standing mode, the posture of the robotic dog in this mode will not always maintain balance.
         The default standing height is 0.33m
         """
-        action_id = ROBOT_CMD["StandUp"] 
+        action_id = SPORT_CLIENT_API_ID["StandUp"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -104,7 +117,7 @@ class SportClient():
         """
         The robotic dog lies down and the motor joint remains locked
         """
-        action_id = ROBOT_CMD["StandDown"] 
+        action_id = SPORT_CLIENT_API_ID["StandDown"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -120,7 +133,7 @@ class SportClient():
         Restore from a overturned or lying state to a balanced standing state. 
         Whether it is overturned or not, it will return to standing
         """
-        action_id = ROBOT_CMD["RecoveryStand"] 
+        action_id = SPORT_CLIENT_API_ID["RecoveryStand"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -172,7 +185,7 @@ class SportClient():
             'z': yaw  # yaw angle in radians
         }
 
-        action_id = ROBOT_CMD["Euler"] 
+        action_id = SPORT_CLIENT_API_ID["Euler"] 
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -213,7 +226,7 @@ class SportClient():
             'z': z   # Angular velocity around the z-axis
         }
 
-        action_id = ROBOT_CMD["Move"] 
+        action_id = SPORT_CLIENT_API_ID["Move"] 
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -229,7 +242,7 @@ class SportClient():
         Special action, robot dog sitting down. 
         It should be noted that special actions need to be executed after the previous action is completed, otherwise it may result in abnormal actions
         """
-        action_id = ROBOT_CMD["Sit"] 
+        action_id = SPORT_CLIENT_API_ID["Sit"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -244,7 +257,7 @@ class SportClient():
         """
         Restore from sitting to balanced standing
         """
-        action_id = ROBOT_CMD["RiseSit"] 
+        action_id = SPORT_CLIENT_API_ID["RiseSit"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -271,7 +284,7 @@ class SportClient():
 
         para = {'data': d}
 
-        action_id = ROBOT_CMD["SwitchGait"]
+        action_id = SPORT_CLIENT_API_ID["SwitchGait"]
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -286,7 +299,7 @@ class SportClient():
         """
         Have no clue what the method does
         """
-        action_id = ROBOT_CMD["Trigger"] 
+        action_id = SPORT_CLIENT_API_ID["Trigger"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -321,7 +334,7 @@ class SportClient():
         para = {'data': height_m}
 
         # Get the action ID for BodyHeight command
-        action_id = ROBOT_CMD["BodyHeight"]
+        action_id = SPORT_CLIENT_API_ID["BodyHeight"]
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -356,7 +369,7 @@ class SportClient():
         para = {'data': height_m}
 
         # Get the action ID for the FootRaiseHeight command
-        action_id = ROBOT_CMD["FootRaiseHeight"]
+        action_id = SPORT_CLIENT_API_ID["FootRaiseHeight"]
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -379,7 +392,7 @@ class SportClient():
 
         para = {'data': level}
 
-        action_id = ROBOT_CMD["SpeedLevel"]
+        action_id = SPORT_CLIENT_API_ID["SpeedLevel"]
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -394,7 +407,7 @@ class SportClient():
         """
         Shakes hand in a way that signifies saying hello.
         """
-        action_id = ROBOT_CMD["Hello"] 
+        action_id = SPORT_CLIENT_API_ID["Hello"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -409,7 +422,7 @@ class SportClient():
         """
         Streaches a few times.
         """
-        action_id = ROBOT_CMD["Stretch"] 
+        action_id = SPORT_CLIENT_API_ID["Stretch"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -427,7 +440,7 @@ class SportClient():
         if len(path_points) != 30:
             raise ValueError("Exactly 30 path points are required.")
 
-        action_id = ROBOT_CMD["TrajectoryFollow"]
+        action_id = SPORT_CLIENT_API_ID["TrajectoryFollow"]
         js_path = [point.__dict__ for point in path_points]  # Convert each PathPoint to dictionary
 
         # Convert the path list to a JSON formatted string
@@ -442,32 +455,7 @@ class SportClient():
         else:
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
-
-    async def SwitchJoystick(self, flag, ack=False):
-        """
-        [NOT WORKING!!!!]
-
-        After turning off the remote control response, the remote control commands will not interfere with the current program operation.
-
-        Parameters:
-        flag (bool): Set true to respond to the native remote control, and false to not respond to the remote control.
-        """
-        # Convert the boolean flag to an integer to comply with expected data format
-        flag_int = 1 if flag else 0
-
-        para = {'data': flag_int}
-
-        action_id = ROBOT_CMD["SwitchJoystick"]
-        response = await self.doRequest(action_id, parameter=para, noreply=not ack)
-        if response:
-            # Use f-string for variable interpolation
-            logger.info(f"Command with api_id: {action_id} succeeded")
-            return True
-        else:
-            # Use f-string for variable interpolation
-            logger.error(f"Command with api_id: {action_id} failed or no response received")
-            return False
-    
+        
     async def ContinuousGait(self, flag, ack=False):
         """
         Activates or deactivates continuous gait mode. In continuous gait mode, the robot dog
@@ -482,7 +470,7 @@ class SportClient():
 
         para = {'data': flag_int}
 
-        action_id = ROBOT_CMD["ContinuousGait"]
+        action_id = SPORT_CLIENT_API_ID["ContinuousGait"]
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -492,29 +480,47 @@ class SportClient():
             # Use f-string for variable interpolation
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
-    
-    async def Wallow(self, ack=False):
-        """
-        Wallow on the floor
-        """
-        action_id = ROBOT_CMD["Wallow"] 
-        response = await self.doRequest(action_id, noreply=not ack)
-        if response:
-            # Use f-string for variable interpolation
-            logger.info(f"Command with api_id: {action_id} succeeded")
-            return True
-        else:
-            # Use f-string for variable interpolation
-            logger.error(f"Command with api_id: {action_id} failed or no response received")
-            return False
-    
+        
+        
     async def Content(self, ack=False):
         """
         [NOT WORKING!!!!]
 
         Happy
         """
-        action_id = ROBOT_CMD["Content"] 
+        action_id = SPORT_CLIENT_API_ID["Content"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+    
+    async def Wallow(self, ack=False):
+        """
+        Wallow on the floor
+        """
+        action_id = SPORT_CLIENT_API_ID["Wallow"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+        
+    async def Dance1(self, ack=False):
+        """
+        Performs a Dance1
+        """
+        action_id = SPORT_CLIENT_API_ID["Dance1"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -525,6 +531,94 @@ class SportClient():
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
     
+    async def Dance2(self, ack=False):
+        """
+        Performs a Dance2
+        """
+        action_id = SPORT_CLIENT_API_ID["Dance2"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+    async def GetBodyHeight(self, ack=False):
+        """
+        GetBodyHeight. !!!API not implemented on the server!!!
+        """
+        action_id = SPORT_CLIENT_API_ID["GetBodyHeight"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+    async def GetFootRaiseHeight(self, ack=False):
+        """
+        GetFootRaiseHeight. !!!API not implemented on the server!!!
+        """
+        action_id = SPORT_CLIENT_API_ID["GetFootRaiseHeight"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+    
+    async def GetSpeedLevel(self, ack=False):
+        """
+        GetSpeedLevel. !!!API not implemented on the server!!!
+        """
+        action_id = SPORT_CLIENT_API_ID["GetSpeedLevel"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+        
+    async def SwitchJoystick(self, flag, ack=False):
+        """
+        [!!NOT WORKING!! Use bash_runner_client instead]
+
+        After turning off the remote control response, the remote control commands will not interfere with the current program operation.
+
+        Parameters:
+        flag (bool): Set true to respond to the native remote control, and false to not respond to the remote control.
+        """
+        # Convert the boolean flag to an integer to comply with expected data format
+        flag_int = 1 if flag else 0
+
+        para = {'data': flag_int}
+
+        action_id = SPORT_CLIENT_API_ID["SwitchJoystick"]
+        response = await self.doRequest(action_id, parameter=para, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+        
+
     async def Pose(self, flag, ack=False):
         """
         Activates or deactivates pose mode. In pose mode, the robot maintains its position while joystick controls can change its Euler angles (roll, pitch, yaw).
@@ -539,7 +633,7 @@ class SportClient():
         para = {'data': flag_int}
 
         # Retrieve the action ID for the 'Pose' command from the SPORT_CMD dictionary
-        action_id = ROBOT_CMD["Pose"]
+        action_id = SPORT_CLIENT_API_ID["Pose"]
 
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
@@ -555,7 +649,7 @@ class SportClient():
         """
         Balances on the hind legs and performs a gesture with the front limbs.
         """
-        action_id = ROBOT_CMD["Scrape"] 
+        action_id = SPORT_CLIENT_API_ID["Scrape"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -570,7 +664,7 @@ class SportClient():
         """
         Performs a Front Flip
         """
-        action_id = ROBOT_CMD["FrontFlip"] 
+        action_id = SPORT_CLIENT_API_ID["FrontFlip"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -585,7 +679,7 @@ class SportClient():
         """
         Performs a Front Jump
         """
-        action_id = ROBOT_CMD["FrontJump"] 
+        action_id = SPORT_CLIENT_API_ID["FrontJump"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -600,7 +694,7 @@ class SportClient():
         """
         Performs a Front Pounce
         """
-        action_id = ROBOT_CMD["FrontPounce"] 
+        action_id = SPORT_CLIENT_API_ID["FrontPounce"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -611,41 +705,12 @@ class SportClient():
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
     
-    async def Dance1(self, ack=False):
-        """
-        Performs a Dance1
-        """
-        action_id = ROBOT_CMD["Dance1"] 
-        response = await self.doRequest(action_id, noreply=not ack)
-        if response:
-            # Use f-string for variable interpolation
-            logger.info(f"Command with api_id: {action_id} succeeded")
-            return True
-        else:
-            # Use f-string for variable interpolation
-            logger.error(f"Command with api_id: {action_id} failed or no response received")
-            return False
-    
-    async def Dance2(self, ack=False):
-        """
-        Performs a Dance2
-        """
-        action_id = ROBOT_CMD["Dance2"] 
-        response = await self.doRequest(action_id, noreply=not ack)
-        if response:
-            # Use f-string for variable interpolation
-            logger.info(f"Command with api_id: {action_id} succeeded")
-            return True
-        else:
-            # Use f-string for variable interpolation
-            logger.error(f"Command with api_id: {action_id} failed or no response received")
-            return False
     
     async def WiggleHips(self, ack=False):
         """
         Performs a WiggleHips
         """
-        action_id = ROBOT_CMD["WiggleHips"] 
+        action_id = SPORT_CLIENT_API_ID["WiggleHips"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -680,7 +745,7 @@ class SportClient():
                   If a parameter is not found, it will not be included in the dictionary.
         """
 
-        action_id = ROBOT_CMD["GetState"]
+        action_id = SPORT_CLIENT_API_ID["GetState"]
         
         # Ensure doRequest can handle a data dict correctly
         response = await self.doRequest(action_id, parameter=parameters, noreply=False)
@@ -722,7 +787,7 @@ class SportClient():
         para = {'data': flag_int}
 
         # Retrieve the action ID for the 'Pose' command from the SPORT_CMD dictionary
-        action_id = ROBOT_CMD["EconomicGait"]
+        action_id = SPORT_CLIENT_API_ID["EconomicGait"]
 
         response = await self.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
@@ -738,7 +803,37 @@ class SportClient():
         """
         Performs a FingerHeart
         """
-        action_id = ROBOT_CMD["FingerHeart"] 
+        action_id = SPORT_CLIENT_API_ID["FingerHeart"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+    
+    async def Handstand(self, ack=False):
+        """
+        Do a Handstand. Only available in advanced mode!
+        """
+        action_id = SPORT_CLIENT_API_ID["Handstand"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+    
+    async def CrossStep(self, ack=False):
+        """
+        Do a CrossStep. Only available in advanced mode!
+        """
+        action_id = SPORT_CLIENT_API_ID["CrossStep"] 
         response = await self.doRequest(action_id, noreply=not ack)
         if response:
             # Use f-string for variable interpolation
@@ -749,64 +844,120 @@ class SportClient():
             logger.error(f"Command with api_id: {action_id} failed or no response received")
             return False
         
+    async def OnesidedStep(self, ack=False):
+        """
+        Do a OnesidedStep. Only available in advanced mode!
+        """
+        action_id = SPORT_CLIENT_API_ID["OnesidedStep"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+    
+    async def Bound(self, ack=False):
+        """
+        Do a Bound. Only available in advanced mode!
+        """
+        action_id = SPORT_CLIENT_API_ID["Bound"] 
+        response = await self.doRequest(action_id, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+    
+    async def LeadFollow(self, flag, ack=False):
+        """
+        Activates or deactivates LeadFollow mode
+
+        Parameters:
+        flag (bool): Set to True to activate LeadFollow mode, or False to deactivate.
+        """
+        # Convert the boolean flag to an integer to match the expected data format
+        flag_int = 1 if flag else 0
+
+        para = {'data': flag_int}
+        action_id = SPORT_CLIENT_API_ID["LeadFollow"] 
+        response = await self.doRequest(action_id, parameter=para, noreply=not ack)
+        if response:
+            # Use f-string for variable interpolation
+            logger.info(f"Command with api_id: {action_id} succeeded")
+            return True
+        else:
+            # Use f-string for variable interpolation
+            logger.error(f"Command with api_id: {action_id} failed or no response received")
+            return False
+
 class SportState:
+    """
+    SportState: This class is designed to obtain high-level motion states of the Go2, such as position, speed, and posture.
+    """
+    _instance = None
+
+    def __new__(cls, communicator, frequency='lf'):
+        # Ensuring only one instance of SportState is created
+        if cls._instance is None:
+            cls._instance = super(SportState, cls).__new__(cls)
+            cls._instance.initialized = False
+        return cls._instance
+
     def __init__(self, communicator, frequency='lf'):
-        self.frequency = frequency
-        self.communicator = communicator
-        self.topic = self._get_topic_name(frequency)
-        self.sport_state = None  # Placeholder for the latest sport state
-        self.custom_callbacks = []  # List to hold custom callbacks
+        if not self.initialized:
+            self.communicator = communicator
+            self.frequency = frequency
+            self.topic = self._get_topic_name(frequency)
+            self.sport_state = None
+            self.callbacks = set()
+            self.listening = False
+            self.initialized = True
 
     def _get_topic_name(self, frequency):
-        if frequency == 'lf':
-            return self.communicator.get_topic_by_name("LF_SPORT_MOD_STATE")
-        elif frequency == 'mf':
-            return self.communicator.get_topic_by_name("MF_SPORT_MOD_STATE")
-        else:
-            return self.communicator.get_topic_by_name("SPORT_MOD_STATE")
-        
-    def add_custom_callback(self, callback):
-        """
-        Registers a custom callback to be called when new data arrives.
-        """
-        if callback not in self.custom_callbacks:
-            self.custom_callbacks.append(callback)
+        return {
+            'lf': self.communicator.get_topic_by_name("SPORT_MOD_STATE_LF"),
+            'mf': self.communicator.get_topic_by_name("SPORT_MOD_STATE_MF")
+        }.get(frequency, self.communicator.get_topic_by_name("SPORT_MOD_STATE"))
 
-    async def process_data(self, data):
+    def add_callback(self, callback):
+        """ Registers a callback to be called when new data arrives. """
+        self.callbacks.add(callback)
+        if not self.listening:
+            asyncio.create_task(self._start_listening())
+
+    def remove_callback(self, callback):
+        """ Remove a specific callback and stop listening if no callbacks remain. """
+        self.callbacks.discard(callback)
+        if not self.callbacks and self.listening:
+            asyncio.create_task(self._stop_listening())
+
+    async def _process_data(self, data):
+        """ Process incoming data and execute callbacks. """
         if isinstance(data, SportModeState_):
             self.sport_state = data
-            logger.info("Data processed and stored in SportState instance.")
-            for callback in self.custom_callbacks:
-                await callback(data)
+            await asyncio.gather(*(callback(data) for callback in self.callbacks))
         else:
-            logger.error("Received data is not of type SportModeState_")
+            logger.error("Incorrect data type received.")
 
-    async def start_listening(self):
-        self.communicator.subscribe(self.topic, SportModeState_, self.process_data)
-        logger.info(f"Started listening to {self.topic}")
+    async def _start_listening(self):
+        """Start listening to the topic only if not already listening."""
+        if not self.listening:
+            self.communicator.subscribe(self.topic, SportModeState_, self._process_data)
+            self.listening = True
+            logger.info(f"Subscribed to {self.topic}")
 
-    async def stop_listening(self):
-        await self.communicator.unsubscribe(self.topic)
-        logger.info(f"Stopped listening to {self.topic}")
-
-    @classmethod
-    async def create_and_listen(cls, comm_protocol="DDS", frequency='lf'):
-        instance = cls(comm_protocol, frequency)
-        await instance.start_listening()
-        return instance
-
-
-
-async def main():
-    client = SportClient()
-    try:
-        result = await client.GetState()
-        print("Robot state parameters retrieved successfully:")
-        for param, value in result.items():
-            print(f"{param}: {value}")
-    except Exception as e:
-        print(f"Failed to retrieve robot state parameters: {e}")
-
+    async def _stop_listening(self):
+        """Stop listening to the topic."""
+        if self.listening:
+            self.communicator.unsubscribe(self.topic)
+            self.listening = False
+            logger.info(f"Unsubscribed from {self.topic}")
         
 # Usage example
 if __name__ == "__main__":
