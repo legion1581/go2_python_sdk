@@ -2,7 +2,7 @@
   <Domain Id="any">
     <General>
       <Interfaces>
-        <NetworkInterface name="wlan0" priority="default" multicast="default" />
+        <NetworkInterface name="wlan1" priority="default" multicast="default" />
       </Interfaces>
     </General>
     <Discovery>

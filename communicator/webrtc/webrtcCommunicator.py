@@ -1,7 +1,7 @@
-from communicator.constants import WEBRTC_TOPICS
-from communicator.communicatorWrapper import CommunicatorWrapper
+from communicator.topics_and_errors import WEBRTC_TOPICS
+from communicator.common import CommunicatorBase
 
-class WebRTCCommunictor(CommunicatorWrapper):
+class WebRTCCommunictor(CommunicatorBase):
     def __init__(self):
         pass
     def get_topic_by_name(self, name):

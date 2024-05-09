@@ -1,71 +1,3 @@
-DDS_ERROR_DESCRIPTIONS = {
-    3001: "Unknown error",
-    3102: "Request sending error",
-    3103: "API not registered",
-    3104: "Request timeout",
-    3105: "Request and response data do not match",
-    3106: "Invalid response data",
-    3107: "Invalid lease",
-    3201: "Response sending error",
-    3202: "Internal server error",
-    3203: "API not implemented on the server",
-    3204: "API parameter error",
-    3205: "Request rejected",
-    3206: "Invalid lease",
-    3207: "Lease already exists",
-    }
-
-SPORT_CLIENT_API_ID = {
-    "Damp": 1001,
-    "BalanceStand": 1002,
-    "StopMove": 1003,
-    "StandUp": 1004,
-    "StandDown": 1005,
-    "RecoveryStand": 1006,
-    "Euler": 1007,
-    "Move": 1008,
-    "Sit": 1009,
-    "RiseSit": 1010,
-    "SwitchGait": 1011,
-    "Trigger": 1012,
-    "BodyHeight": 1013,
-    "FootRaiseHeight": 1014,
-    "SpeedLevel": 1015,
-    "Hello": 1016,
-    "Stretch": 1017,
-    "TrajectoryFollow": 1018,
-    "ContinuousGait": 1019,
-    "Content": 1020, #API not implemented on the server
-    "Wallow": 1021,
-    "Dance1": 1022,
-    "Dance2": 1023,
-    "GetBodyHeight": 1024, #API not implemented on the server
-    "GetFootRaiseHeight": 1025, #API not implemented on the server
-    "GetSpeedLevel": 1026, #API not implemented on the server
-    "SwitchJoystick": 1027, #NOT WORKING use bash_runner_client instead!!!
-    "Pose": 1028,
-    "Scrape": 1029,
-    "FrontFlip": 1030,
-    "FrontJump": 1031,
-    "FrontPounce": 1032,
-    "WiggleHips": 1033,
-    "GetState": 1034,
-    "EconomicGait": 1035,
-    "FingerHeart": 1036,
-    "Handstand": 1301,
-    "CrossStep": 1302,
-    "OnesidedStep": 1303,
-    "Bound": 1304,
-    "LeadFollow": 1045    
-}
-
-SPORT_MODE_SWITCH_API_ID = {
-    "GetMode": 1001,
-    "SetMode": 1002,
-    "ReleaseMode": 1003,
-    "SetSilent": 1004,
-    "GetSilent": 1005
-}
 
 #Topics only available through WebRTC (however will work through DDS)
 
@@ -85,13 +17,13 @@ WEBRTC_TOPICS = {
     "UWB_RESPONSE": "rt/api/uwbswitch/response",
     "BASH_REQ": "rt/api/bashrunner/request",
     "BASH_RESPONSE": "rt/api/bashrunner/response",
-    "OBSTACLES_AVOID": "rt/api/obstacles_avoid/request",
+    "OBSTACLES_AVOID_REQ": "rt/api/obstacles_avoid/request",
     "OBSTACLES_AVOID_RESPONSE": "rt/api/obstacles_avoid/response",
-    "VUI": "rt/api/vui/request",
+    "VUI_REQ": "rt/api/vui/request",
     "VUI_RESPONSE": "rt/api/vui/response",
-    "GPT": "rt/api/gpt/request",
+    "GPT_REQ": "rt/api/gpt/request",
     "GPT_RESPONSE": "rt/api/gpt/response",
-    "SPORT_MOD": "rt/api/sport/request",
+    "SPORT_MOD_REQ": "rt/api/sport/request",
     "SPORT_RESPONSE": "rt/api/sport/response",
     "ROBOT_STATE_REQ": "rt/api/robot_state/request",
     "ROBOT_STATE_RESPONSE": "rt/api/robot_state/response",
@@ -99,7 +31,7 @@ WEBRTC_TOPICS = {
     "AUDIO_HUB_RESPONSE": "rt/api/audiohub/response",
     "CONFIG_REQ": "rt/api/config/request",
     "CONFIG_RESPONSE": "rt/api/config/response",
-    "SPORT_MODE_SWITCHER": "rt/api/motion_switcher/request",
+    "SPORT_MODE_SWITCHER_REQ": "rt/api/motion_switcher/request",
     "SPORT_MODE_SWITCHER_RESPONSE": "rt/api/motion_switcher/response",
     "GAS_SENSOR_REQ": "rt/api/gas_sensor/request",
     "GAS_SENSOR_RESPONSE": "rt/api/gas_sensor/response",
@@ -146,7 +78,28 @@ DDS_ONLY_TOPICS = {
     "SPORT_MOD_STATE_MF": "rt/mf/sportmodestate",
     "ULIDAR": "rt/utlidar/voxel_map",
     "LOW_STATE": "rt/lowstate",
+    "LOW_CMD": "rt/lowcmd"
 }
 
 # Combine WebRTC topics with DDS-specific topics for comprehensive DDS topics
 DDS_TOPICS = {**WEBRTC_TOPICS, **DDS_ONLY_TOPICS}
+
+STATUS_CODE_ERROR_DESCRIPTIONS = {
+    3001: "Unknown error",
+    3102: "Request sending error",
+    3103: "API not registered",
+    3104: "Request timeout",
+    3105: "Request and response data do not match",
+    3106: "Invalid response data",
+    3107: "Invalid lease",
+    3201: "Response sending error",
+    3202: "Internal server error",
+    3203: "API not implemented on the server",
+    3204: "API parameter error",
+    3205: "Request rejected",
+    3206: "Invalid lease",
+    3207: "Lease already exists",
+    4101: "Wrong number of trajectory points, returned by the client",
+    5201: "Service switch execution error",
+    5202: "The service is protected and cannot be turned on or off"
+    }

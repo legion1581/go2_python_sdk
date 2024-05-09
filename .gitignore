@@ -2,5 +2,4 @@ RE/
 __pycache__/
 test/
 log/
-trajectory_follow.py
-basic_client.py
+sport_client_trajectory_follow_example.py

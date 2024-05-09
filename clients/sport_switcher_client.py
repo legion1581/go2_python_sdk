@@ -1,44 +1,37 @@
 import json
 import logging
-from communicator.constants import SPORT_MODE_SWITCH_API_ID
+from .api import SPORT_MODE_SWITCH_API_ID
+from .pub_sub import PublishRequest
 
 logger = logging.getLogger(__name__)
 
-class MotionSwitcher:
+class SportSwitcherClient:
     """
     SportModeSwitcher: This class manages switching the high-level operational mode between normal and advanced.
     Certain maneuvers like Handstand, CrossStep, OnesidedStep, and Bound are only supported in the advanced mode,
     which requires firmware version 1.0.23 or later.
     """
-    def __init__(self, communicator):
-        self.communicator = communicator  
-        self.sport_topic = self.communicator.get_topic_by_name("SPORT_MODE_SWITCHER")  
+    default_service_name = 'sport_switcher_client'
+    def __init__(self, communicator, *args, **kwargs):
+        self.communicator = communicator
+        self.logger = logging.getLogger(__class__.__name__)
 
-    async def doRequest(self, api_id, parameter=None, priority=0, noreply=False):
-        requestData = {
-            'api_id': api_id,
-            'parameter': parameter,
-            'priority': priority,
-            'noreply': noreply
-        }
-
-        # Send the request and wait for a response if noreply is False
-        response = await self.communicator.publishReq(self.sport_topic, requestData, timeout=2)
-
-        # If noreply is True, just indicate that the request was sent
-        if noreply:
-            logger.info("Request sent with no reply expected.")
-            return True
-
-        # For reply-expected requests, directly return the response which is either None or contains the response data
-        return response
+    # Initialize PublishRequest for sending specific requests
+        self.sport_switcher_publisher = PublishRequest(
+            communicator=self.communicator,
+            topic_name='SPORT_MODE_SWITCHER_REQ',
+            logger=self.logger
+        )
+    
+    def update_from(self, other):
+        self.logger = other.logger.getChild(self.__class__.__name__)
 
     async def getSportMode(self):
         """
         Retrieve the current sport mode from the device and parse the mode details.
         """
         action_id = SPORT_MODE_SWITCH_API_ID["GetMode"] 
-        response = await self.doRequest(action_id, noreply=False)
+        response = await self.sport_switcher_publisher.doRequest(action_id, noreply=False)
         parsed_parameters = {}
 
         if response:
@@ -74,7 +67,7 @@ class MotionSwitcher:
         para = {"name": mode}
         
         # Send the request to the device and await the response
-        response = await self.doRequest(action_id, parameter=para, noreply=False)
+        response = await self.sport_switcher_publisher.doRequest(action_id, parameter=para, noreply=False)
         
         # Check if the response was successful
         if response:
@@ -100,7 +93,7 @@ class MotionSwitcher:
         action_id = SPORT_MODE_SWITCH_API_ID["ReleaseMode"]
       
         # Send the request to the device and await the response
-        response = await self.doRequest(action_id, parameter=para, noreply=False)
+        response = await self.sport_switcher_publisher.doRequest(action_id, parameter=para, noreply=False)
         # Check if the response was successful
         if response:
             # Log success with the action ID and mode set
@@ -132,7 +125,7 @@ class MotionSwitcher:
         action_id = SPORT_MODE_SWITCH_API_ID["SetSilent"]
 
         # Send the request and check for an acknowledgment if required
-        response = await self.doRequest(action_id, parameter=para, noreply=not ack)
+        response = await self.sport_switcher_publisher.doRequest(action_id, parameter=para, noreply=not ack)
         if response:
             # Log success with the action ID
             logger.info(f"Silent mode set command with api_id: {action_id} succeeded")
@@ -147,7 +140,7 @@ class MotionSwitcher:
         Retrieves the current state of the silent mode from the device. Have no clue what the silent mode is
         """
         action_id = SPORT_MODE_SWITCH_API_ID["GetSilent"]
-        response = await self.doRequest(action_id, noreply=False)
+        response = await self.sport_switcher_publisher.doRequest(action_id, noreply=False)
         parsed_parameters = {}
 
         if response:

@@ -1,5 +1,5 @@
 # Common base class for PubSub and ReqRes communication
-class CommunicatorWrapper:
+class CommunicatorBase:
     def publish(self, topic, data, data_type):
         raise NotImplementedError
 
